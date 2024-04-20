@@ -1,14 +1,15 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
+import {AppBar, Box, Toolbar, Typography, IconButton} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import NavBarDrawer from '../NavBarDrawer/NavBarDrawer';
+import { SearchBar } from '../SearchBar'
 
-const NavBar = () => {
+interface NavBarProps {
+  setSearchedValue: (value: string) => void
+  
+}
+
+const NavBar = ({setSearchedValue}: NavBarProps) => {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -18,14 +19,14 @@ const NavBar = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Toolbar sx={{ justifyContent: 'space-between',  paddingRight: 0 }}>
           {/* Left side */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               size="large"
               edge="start"
               color="inherit"
-              aria-label="menu"
+              aria-label="menu" 
               sx={{ mr: 2 }}
               onClick={toggleDrawer(true)}
             >
@@ -48,9 +49,9 @@ const NavBar = () => {
           </Box>
           
           {/* Right side */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', }}>
             <NavBarDrawer open={open} toggleDrawer={toggleDrawer} />
-            <Button color="inherit">Login</Button>
+            <SearchBar setSearchedValue={setSearchedValue} />
           </Box>
         </Toolbar>
       </AppBar>

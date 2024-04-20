@@ -44,12 +44,11 @@ export default function NewsCard({newsData}: NewsCardProps) {
     <>
     {
         newsData && newsData.length > 0 && newsData.map((article, index) => {
-          return article.author && <div style={{margin: '15px 0'}} key={index}> <Card sx={{ maxWidth: 500  }}>
+          return  <div style={{margin: '15px 0'}} key={index}> <Card sx={{ width: 500  }}>
           
           <CardHeader
             avatar={
               <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                {article.author.charAt(0).toUpperCase()}
               </Avatar>
             }
             action={
@@ -62,7 +61,6 @@ export default function NewsCard({newsData}: NewsCardProps) {
               <>
               <p>{article.description}</p>
               <p>{dateFormatter(article.publishedAt)}</p>
-              <p><span>Author: </span>{article.author}</p>
               <p><span>Source: </span>{article.source.name}</p>
               </>
             }
