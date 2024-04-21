@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {AppBar, Box, Toolbar, Typography, IconButton} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import NavBarDrawer from '../NavBarDrawer/NavBarDrawer';
+import { AppBar, Box, Toolbar, Typography, Grid } from '@mui/material';
 import { SearchBar } from '../SearchBar'
 import { Link } from "react-router-dom";
 
@@ -20,44 +18,37 @@ const NavBar = ({setSearchedValue}: NavBarProps) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar sx={{ justifyContent: 'space-between',  paddingRight: 0 }}>
-          {/* Left side */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu" 
-              sx={{ mr: 2 }}
-              onClick={toggleDrawer(true)}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
+        <Toolbar sx={{ paddingRight: 0 }}>
           
-          {/* Center */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Typography variant="h6" component="div">
-            <Link to="/">Home</Link>
-            </Typography>
-            <Typography variant="h6" component="div">
-              |
-            </Typography>
-            <Typography variant="h6" component="div" sx={{ mr: 1 }}>
-            <Link to="/for-you">For You</Link>
-            </Typography>
-            <Typography variant="h6" component="div">
-              |
-            </Typography>
-            <Typography variant="h6" component="div" sx={{ mr: 1 }}>
-            <Link to="/settings">Settings</Link>
-            </Typography>
-            <NavBarDrawer open={open} toggleDrawer={toggleDrawer} />
-          </Box>
+          <Grid container alignItems="center">
+            <Grid item>
+              <Typography variant="h6" component="div">
+                <Link to="/">Home</Link>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" component="div" sx={{ mx: 1 }}>
+                |
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" component="div">
+                <Link to="/for-you">For You</Link>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" component="div" sx={{ mx: 1 }}>
+                |
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" component="div">
+                <Link to="/settings">Settings</Link>
+              </Typography>
+            </Grid>
+          </Grid>
           
-          {/* Right side */}
-          <Box sx={{ display: 'flex', alignItems: 'center', }}>
-            <NavBarDrawer open={open} toggleDrawer={toggleDrawer} />
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
             <SearchBar setSearchedValue={setSearchedValue} />
           </Box>
         </Toolbar>

@@ -6,14 +6,14 @@ import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Article } from './types';
 import { dateFormatter } from './helper';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean;
@@ -63,67 +63,72 @@ export default function NewsCard({ newsData }: NewsCardProps) {
   }, [handleScroll]);
 
   return (
-    <>
-      {newsData &&
-        newsData.length > 0 &&
-        newsData.slice(0, visibleCount).map((article, index) => {
-          return (
-            <div style={{ margin: '15px 0' }} key={index}>
-              {' '}
-              <Card sx={{ maxWidth: 500 }}>
-                <CardHeader
-                  action={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
-                  }
-                  title={article.title}
-                  subheader={
-                    <>
-                      <p>{article.description}</p>
-                      <p>{dateFormatter(article.publishedAt)}</p>
-                      <p>
-                        <span>Source: </span>
-                        {article.source.name}
-                      </p>
-                    </>
-                  }
-                />
-                {article.urlToImage && (
-                  <CardMedia
-                    component="img"
-                    height="194"
-                    image={article.urlToImage}
-                    alt="Paella dish"
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Grid container spacing={2} xs={12}>
+        {newsData &&
+          newsData.length > 0 &&
+          newsData.slice(0, visibleCount).map((article, index) => {
+            return (
+              <Grid item xs={12} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}} key={index}>
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardHeader
+                    action={
+                      <IconButton aria-label="settings">
+                        <MoreVertIcon />
+                      </IconButton>
+                    }
+                    title={article.title}
+                    subheader={
+                      <>
+                        <Typography variant="body2" color="text.secondary" component="p">
+                          {article.description}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" component="p">
+                          {dateFormatter(article.publishedAt)}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" component="p">
+                          <span>Source: </span>
+                          {article.source.name}
+                        </Typography>
+                      </>
+                    }
                   />
-                )}
-                <CardContent></CardContent>
-                <CardActions disableSpacing>
-                  Show Content
-                  <ExpandMore
-                    expand={expanded}
-                    onClick={handleExpandClick}
-                    aria-expanded={expanded}
-                    aria-label="show more"
+                  {article.urlToImage && (
+                    <CardMedia
+                      component="img"
+                      height="194"
+                      image={article.urlToImage}
+                      alt="Paella dish"
+                    />
+                  )}
+                  <CardContent></CardContent>
+                  <CardActions disableSpacing>
+                    Show Content
+                    <ExpandMore
+                      expand={expanded}
+                      onClick={handleExpandClick}
+                      aria-expanded={expanded}
+                      aria-label="show more"
+                    >
+                      <ExpandMoreIcon />
+                    </ExpandMore>
+                  </CardActions>
+                  <Collapse
+                    in={expanded}
+                    timeout="auto"
+                    unmountOnExit
                   >
-                    <ExpandMoreIcon />
-                  </ExpandMore>
-                </CardActions>
-                <Collapse
-                  in={expanded}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                      {article.content}
-                    </Typography>
-                  </CardContent>
-                </Collapse>
-              </Card>
-            </div>
-          );
-        })}
-    </>
+                    <CardContent>
+                      <Typography variant="body2" color="text.secondary">
+                        {article.content}
+                      </Typography>
+                    </CardContent>
+                  </Collapse>
+                </Card>
+              </Grid>
+            );
+          })}
+      </Grid>
+    </Box>
   );
 }
