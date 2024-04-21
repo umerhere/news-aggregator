@@ -86,14 +86,14 @@ export const CONSTANTS = {
     "Harris Glenn"
   ],
   SOURCES: [
-    "wired",
-    "the-verge",
-    "bbc-news",
-    "business-insider",
-    "time",
-    "the-next-web",
-    "abc-news",
-    "new-scientist",
+    // "wired",
+    // "the-verge",
+    // "bbc-news",
+    // "business-insider",
+    // "time",
+    // "the-next-web",
+    // "abc-news",
+    // "new-scientist",
     "The Guardian",
     "The New York Times",
   ]

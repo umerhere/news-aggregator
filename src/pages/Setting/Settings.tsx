@@ -33,7 +33,7 @@ export default function Settings() {
     <CenteredContainer>
       <FormControl defaultValue="" required>
         <Dropdown
-          label="Keywords"
+          label="Category"
           value={selectedKeywords}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedKeywords(e.target.value)}
           options={CONSTANTS.INITIAL_KEYWORDS}

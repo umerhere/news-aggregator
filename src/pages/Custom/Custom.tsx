@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { NewsCard } from '../../layouts/Card';
-import { Article } from '../../layouts/Card/types';
+import { NewsCard } from '../../Components/Card';
+import { Article } from '../../Components/Card/types';
 import dayjs, { Dayjs } from 'dayjs';
-import { useAppSelector } from '../../store/hooks'
-import { loadNewsDatas } from '../../store/slices/newsDataSlice'
-import { useDispatch } from 'react-redux'
-
+import { useAppSelector } from '../../store/hooks';
+import { CircularProgress } from '@mui/material';
+import { loadNewsData } from '../../store/slices/newsDataSlice';
+import { useDispatch } from 'react-redux';
 
 interface HomeProps {
   searchedValue: string | null;
 }
 
-const Home = ({ searchedValue }: HomeProps) => {
+const Custom = () => {
+  const searchedValue = localStorage.getItem('selectedKeywords');
+  const searchedCategory = localStorage.getItem('selectedAuthor');
   const [newsData, setNewsData] = useState<Array<Article> | null>(null);
-  const [filteredNewsData, setFilteredNewsData] = useState<Array<Article> | null>(newsData);
-  const [selectedAuthors, setSelectedAuthors] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [startDate, setStartDate] = useState<Dayjs | null>(null);
-  const [endDate, setEndDate] = useState<Dayjs | null>(null);
-  const [selectedSources, setSelectedSources] = useState<string>('Select');
-  const [age, setAge] = React.useState('');
-  const newsDataSlice = useAppSelector(state => state.newsDataSlice)
-  const dispatch = useDispatch()
-  
+  const [filteredNewsData, setFilteredNewsData] = useState<Array<Article> | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
-  console.log("newsDataSlicenewsDataSlicenewsDataSlicenewsDataSlicenewsDataSlice", newsDataSlice);
   // URLs for different APIs
   const NEWSAPI_URL = process.env.REACT_APP_NEWSAPI_URL?.replace(
     '%SEARCH_VALUE%',
     searchedValue || ''
-  )?.replace('%NEWSAPI_API_KEY%', process.env.REACT_APP_NEWSAPI_API_KEY || '');
+  )?.replace('%NEWSAPI_API_KEY%', process.env.REACT_APP_NEWSAPI_API_KEY || '')?.replace(
+    '%SEARCH_CATEGORY_VALUE%',
+    searchedCategory || ''
+  );
 
   const NEWYORK_TIMES_API_URL = process.env.REACT_APP_NEWYORK_TIMES_API_URL?.replace(
     '%SEARCH_VALUE%',
@@ -43,12 +40,12 @@ const Home = ({ searchedValue }: HomeProps) => {
 
   useEffect(() => {
     const fetchNewsData = async () => {
-      setNewsData(null);
+      setLoading(true);
       try {
         let newsApiArticles: Article[] = [];
         let guardianApiArticles: Article[] = [];
         let newYorkTimesApiArticles: Article[] = [];
-  
+
         // Fetch news data from News API
         if (NEWSAPI_URL) {
           const newsApiResponse = await fetch(NEWSAPI_URL);
@@ -72,7 +69,7 @@ const Home = ({ searchedValue }: HomeProps) => {
             }
           }
         }
-  
+
         // Fetch news data from The Guardian API
         if (THE_GUARDIAN_API_URL) {
           const guardianApiResponse = await fetch(THE_GUARDIAN_API_URL);
@@ -92,7 +89,7 @@ const Home = ({ searchedValue }: HomeProps) => {
             }));
           }
         }
-  
+
         // Fetch news data from New York Times API
         if (NEWYORK_TIMES_API_URL) {
           const newYorkTimesApiResponse = await fetch(NEWYORK_TIMES_API_URL);
@@ -110,27 +107,29 @@ const Home = ({ searchedValue }: HomeProps) => {
               url: article.web_url,
               urlToImage: '',
             }));
-            console.log("The New York Times NEWYORK_TIMES_API_URL", NEWYORK_TIMES_API_URL);
-            console.log("The New York Times", newYorkTimesApiArticles);
           }
         }
-  
-        // Concatenate articles from all APIs and set the state
+
         const data: Array<Article> = [...newsApiArticles, ...guardianApiArticles, ...newYorkTimesApiArticles];
         setNewsData(data);
         setFilteredNewsData(data);
-        // dispatch(loadNewsDatas(data));
+        setLoading(false);
       } catch (error) {
         console.error('There was a problem with your fetch operation:', error);
+        setLoading(false);
       }
     };
-  
+
     fetchNewsData();
   }, [searchedValue, NEWSAPI_URL, THE_GUARDIAN_API_URL, NEWYORK_TIMES_API_URL, dispatch]);
 
-  console.log("Start date", startDate);
   return (
     <>
+      {loading && (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <CircularProgress />
+        </div>
+      )}
 
       <div
         style={{
@@ -146,4 +145,4 @@ const Home = ({ searchedValue }: HomeProps) => {
   );
 };
 
-export default Home;
+export default Custom;

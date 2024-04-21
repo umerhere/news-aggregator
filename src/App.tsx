@@ -17,7 +17,7 @@ function App() {
       <NavBar setSearchedValue={setSearchedValue} />
       <Routes>
           <Route path="/" element={<Home searchedValue={searchedValue} />} />
-          <Route path="/for-you" element={<Custom searchedValue={searchedValue} />} />
+          <Route path="/for-you" element={<Custom />} />
           <Route path="/settings" element={<Settings />} />
       </Routes>
     </BrowserRouter>
