@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NewsCard } from '../../layouts/Card';
 import { Article } from '../../layouts/Card/types';
-import { TextField, Autocomplete, MenuItem, Button } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
-import { CONSTANTS } from '../../core/constants';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppSelector } from '../../store/hooks'
 import { loadNewsDatas } from '../../store/slices/newsDataSlice'
@@ -138,97 +128,9 @@ const Home = ({ searchedValue }: HomeProps) => {
     fetchNewsData();
   }, [searchedValue, NEWSAPI_URL, THE_GUARDIAN_API_URL, NEWYORK_TIMES_API_URL, dispatch]);
 
-  const handleAuthorChange = (event: React.SyntheticEvent<Element, Event>, value: string[]) => {
-    setSelectedAuthors(value);
-  };
-
-  const handleCategoryChange = (event: React.SyntheticEvent<Element, Event>, value: string[]) => {
-    setSelectedCategories(value);
-  };
-
-  // const handleSourceChange = (event: React.SyntheticEvent<Element, Event>, value: string[]) => {
-  //   setSelectedSources(value);
-  // };
-
-  const handleSourceChange = (event: SelectChangeEvent) => {
-    setSelectedSources(event.target.value as string);
-  };
-  
-  const handleFilters = () => {
-    console.log("selectedSources", selectedSources);
-    const filtered = newsData?.filter((news) => {
-      return news.source.name === selectedSources;
-    });
-    console.log("filtered news are", filtered);
-    setFilteredNewsData(filtered ?? null);
-  };
-  
-  function formatSource(source: string): string {
-    return source.replace(/-/g, ' ').replace(/\b\w/g, (char: string) => char.toUpperCase());
-  }
-
   console.log("Start date", startDate);
   return (
     <>
-      <Autocomplete
-        sx={{ m: 1, width: 500 }}
-        multiple
-        options={CONSTANTS.AUTHORS}
-        value={selectedAuthors}
-        onChange={handleAuthorChange}
-        getOptionLabel={(option) => option}
-        disableCloseOnSelect
-        renderInput={(params) => (
-          <TextField {...params} variant="outlined" label="Authors" placeholder="Select Authors" />
-        )}
-      />
-
-      <Autocomplete
-        sx={{ m: 1, width: 500 }}
-        multiple
-        options={CONSTANTS.AUTHORS}
-        value={selectedCategories}
-        onChange={handleCategoryChange}
-        getOptionLabel={(option) => option}
-        disableCloseOnSelect
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Categories"
-            placeholder="Select Categories"
-          />
-        )}
-      />
-
-      <FormControl sx={{ m: 1, width: 500 }}>
-        <InputLabel id="demo-simple-select-label">Source</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={selectedSources} 
-          label="Source"
-          onChange={handleSourceChange}
-        >
-          {
-    CONSTANTS.SOURCES.map((source) => (
-      <MenuItem key={source} value={source}>{formatSource(source)}</MenuItem>
-    ))
-  }
-        </Select>
-      </FormControl>
-      
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker', 'DatePicker']}>
-          <DatePicker
-            label="Controlled picker"
-            value={startDate ? dayjs(startDate) : null}
-            onChange={(newValue) => setStartDate(newValue)}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
-      
-      <Button onClick={handleFilters}>Filter</Button>
 
       <div
         style={{

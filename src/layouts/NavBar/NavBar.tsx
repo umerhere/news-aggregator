@@ -3,6 +3,7 @@ import {AppBar, Box, Toolbar, Typography, IconButton} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import NavBarDrawer from '../NavBarDrawer/NavBarDrawer';
 import { SearchBar } from '../SearchBar'
+import { Link } from "react-router-dom";
 
 interface NavBarProps {
   setSearchedValue: (value: string) => void
@@ -37,13 +38,19 @@ const NavBar = ({setSearchedValue}: NavBarProps) => {
           {/* Center */}
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="h6" component="div">
-              Home
+            <Link to="/">Home</Link>
             </Typography>
             <Typography variant="h6" component="div">
               |
             </Typography>
             <Typography variant="h6" component="div" sx={{ mr: 1 }}>
-              For You
+            <Link to="/for-you">For You</Link>
+            </Typography>
+            <Typography variant="h6" component="div">
+              |
+            </Typography>
+            <Typography variant="h6" component="div" sx={{ mr: 1 }}>
+            <Link to="/settings">Settings</Link>
             </Typography>
             <NavBarDrawer open={open} toggleDrawer={toggleDrawer} />
           </Box>
