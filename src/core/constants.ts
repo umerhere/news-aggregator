@@ -73,4 +73,28 @@ export const CONSTANTS = {
     "Paranormal",
     "Conspiracy Theories"
   ],
+  AUTHORS:[
+    "Humaira Sims",
+    "Santiago Solis",
+    "Dawid Floyd",
+    "Mateo Barlow",
+    "Samia Navarro",
+    "Kaden Fields",
+    "Genevieve Watkins",
+    "Mariah Hickman",
+    "Rocco Richardson",
+    "Harris Glenn"
+  ],
+  SOURCES: [
+    "wired",
+    "the-verge",
+    "bbc-news",
+    "business-insider",
+    "time",
+    "the-next-web",
+    "abc-news",
+    "new-scientist",
+    "The Guardian",
+    "The New York Times",
+  ]
 }
