@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NewsCard } from '../../Components/Card';
+import { CONSTANTS } from '../../core/constants';
 import { Article } from '../../Components/Card/types';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppSelector } from '../../store/hooks';
 import { CircularProgress } from '@mui/material';
 import { loadNewsData } from '../../store/slices/newsDataSlice';
 import { useDispatch } from 'react-redux';
+import {FilterComponent} from '../../Components/FilterComponent';
 
 interface HomeProps {
   searchedValue: string | null;
@@ -19,6 +21,13 @@ const Custom = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
+  const newsDataFromStore: Article[] | null = useAppSelector((state) => state.newsDataSlice.newsData);
+  const sourcesFromStore = useAppSelector((state) => state.newsDataSlice.sources);
+  
+  const handleFilter = (filteredData: Article[] | null) => {
+    setNewsData(filteredData);
+  };
+  
   // URLs for different APIs
   const NEWSAPI_URL = process.env.REACT_APP_NEWSAPI_URL?.replace(
     '%SEARCH_VALUE%',
@@ -131,6 +140,13 @@ const Custom = () => {
         </div>
       )}
 
+<FilterComponent
+        authors={CONSTANTS.AUTHORS}
+        sources={sourcesFromStore}
+        newsData={newsDataFromStore}
+        onFilter={handleFilter}
+      />
+      
       <div
         style={{
           display: 'flex',

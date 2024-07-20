@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Autocomplete, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Autocomplete, Button, FormControl, InputLabel, MenuItem, Select, TextField, Grid } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -70,49 +70,68 @@ const FilterComponent: React.FC<FilterComponentProps> = ({ authors, sources, new
   }
 
   return (
-    <>
-      <Autocomplete
-        sx={{ m: 1, width: 500 }}
-        multiple
-        options={authors}
-        value={selectedAuthors}
-        onChange={handleAuthorChange}
-        getOptionLabel={(option) => option}
-        disableCloseOnSelect
-        renderInput={(params) => (
-          <TextField {...params} variant="outlined" label="Authors" placeholder="Select Authors" />
-        )}
-      />
-
-      <FormControl sx={{ m: 1, width: 500 }}>
-        <InputLabel id="demo-simple-select-label">Source</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={selectedSources}
-          label="Source"
-          onChange={handleSourceChange}
-        >
-          <MenuItem value="Select">Select</MenuItem>
-          {sources.map((source, index) => (
-            <MenuItem key={index} value={source}>
-              {formatSource(source)}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Select a date"
-          value={startDate}
-          onChange={(newValue) => handleDateChange(newValue)}
+    <Grid style={{padding: '30px'}} container spacing={2} alignItems="center">
+      <Grid item xs={12} sm={3}>
+        <Autocomplete
+          fullWidth
+          multiple
+          options={authors}
+          value={selectedAuthors}
+          onChange={handleAuthorChange}
+          getOptionLabel={(option) => option}
+          disableCloseOnSelect
+          renderInput={(params) => (
+            <TextField {...params} variant="outlined" label="Authors" placeholder="Select Authors" />
+          )}
         />
-      </LocalizationProvider>
+      </Grid>
 
-      <Button onClick={handleFilter}>Filter</Button>
-      <Button onClick={handleReset}>Reset</Button>
-    </>
+      <Grid item xs={12} sm={3}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Source</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={selectedSources}
+            label="Source"
+            onChange={handleSourceChange}
+          >
+            <MenuItem value="Select">Select</MenuItem>
+            {sources.map((source, index) => (
+              <MenuItem key={index} value={source}>
+                {formatSource(source)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+
+      <Grid  item xs={12} sm={3}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+          sx={{ width: '100%' }}
+
+            label="Select a date"
+            value={startDate}
+            onChange={(newValue) => handleDateChange(newValue)}
+          />
+        </LocalizationProvider>
+      </Grid>
+
+      <Grid style={{display: 'flex'}} item xs={12} sm={3}>
+      <Grid style={{marginRight: '5px'}} item xs={12} sm={6}>
+        <Button fullWidth variant="contained" color="primary" onClick={handleFilter}>
+          Filter
+        </Button>
+      </Grid>
+
+      <Grid item xs={12} sm={6}>
+        <Button fullWidth variant="contained" color="error" onClick={handleReset}>
+          Reset
+        </Button>
+      </Grid>
+</Grid>
+    </Grid>
   );
 };
 
