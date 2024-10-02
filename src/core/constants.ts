@@ -1,3 +1,42 @@
-export const NEWSAPI_URL = 'https://newsapi.org/v2/everything?q=';
-export const NYTIMES_URL = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=';
-export const GUARDIAN_URL = 'https://content.guardianapis.com/search?q=';
+export const CONSTANTS = {
+    NEWSAPI_URL : 'https://newsapi.org/v2/everything?q=',
+    NYTIMES_URL : 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=',
+    GUARDIAN_URL : 'https://content.guardianapis.com/search?q=',
+    INITIAL_KEYWORDS : [
+      "Breaking News",
+      "World News",
+      "Politics",
+      "Business",
+      "Technology",
+      "Science",
+      "Health",
+      "Entertainment",
+      "Sports",
+    ],
+    AUTHORS: [
+      "Humaira Sims",
+      "Santiago Solis",
+      "Dawid Floyd",
+      "Mateo Barlow",
+      "Samia Navarro",
+      "Kaden Fields",
+      "Genevieve Watkins",
+      "Mariah Hickman",
+      "Rocco Richardson",
+      "Harris Glenn"
+    ],
+    CATEGORIES: [
+      "Sports",
+      "Technology",
+      "Business",
+      "Entertainment",
+      "Health",
+    ],
+    SOURCES: [
+      "NewsAPI",
+      "The Guardian",
+      "The New York Times",
+      "BBC",
+      "Al Jazeera",
+    ],
+};

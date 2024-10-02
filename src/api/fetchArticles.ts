@@ -2,22 +2,20 @@
 
 import axios from 'axios';
 import {
-  NEWSAPI_URL,
-  NYTIMES_URL,
-  GUARDIAN_URL,
+CONSTANTS
 } from 'core/constants';
 
 const NEWSAPI_KEY = process.env.REACT_APP_NEWSAPI_KEY;
 const NYTIMES_KEY = process.env.REACT_APP_NYTIMES_KEY;
 const GUARDIAN_KEY = process.env.REACT_APP_GUARDIAN_KEY;
 
-export const fetchData = async (searchTerm: string, selectedDate: string | null, selectedSource: string): Promise<Article[]> => {
+export const fetchData = async (searchTerm: string | null, selectedDate: string | null, selectedSource: string): Promise<Article[]> => {
   try {
-    const query = searchTerm.trim() || 'news';
+    const query = searchTerm?.trim() || 'news';
 
-    let newsApiURL = `${NEWSAPI_URL}${query}&apiKey=${NEWSAPI_KEY}`;
-    let nyTimesURL = `${NYTIMES_URL}${query}&api-key=${NYTIMES_KEY}`;
-    let guardianURL = `${GUARDIAN_URL}${query}&api-key=${GUARDIAN_KEY}`;
+    let newsApiURL = `${CONSTANTS.NEWSAPI_URL}${query}&apiKey=${NEWSAPI_KEY}`;
+    let nyTimesURL = `${CONSTANTS.NYTIMES_URL}${query}&api-key=${NYTIMES_KEY}`;
+    let guardianURL = `${CONSTANTS.GUARDIAN_URL}${query}&api-key=${GUARDIAN_KEY}`;
 
     if (selectedDate) {
       newsApiURL += `&from=${selectedDate}&to=${selectedDate}`;

@@ -1,11 +1,79 @@
-import React from 'react';
-import { Typography, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Card, CardContent, Typography, Grid, Container,
+} from '@mui/material';
+import dayjs from 'dayjs';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/index';
+import { fetchData } from 'api/fetchArticles';
 
 const ForYou: React.FC = () => {
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { preferredAuthor, preferredCategory, preferredSource } = useSelector(
+    (state: RootState) => state.settingsSlice
+  );
+
+  useEffect(() => {
+    const applyUserFilters = async () => {
+      setLoading(true);
+      try {
+        const articles = await fetchData(null, null, preferredSource);
+
+        const filtered = articles.filter((article: Article) => {
+          const matchesAuthor =
+            preferredAuthor === 'All' || article.author?.toLowerCase() === preferredAuthor.toLowerCase();
+          const matchesCategory =
+            preferredCategory === 'All' || article.description?.toLowerCase().includes(preferredCategory.toLowerCase());
+          const matchesSource =
+            preferredSource === 'All' || article.source?.toLowerCase() === preferredSource.toLowerCase();
+
+          return matchesAuthor || matchesCategory || matchesSource;
+        });
+
+        setFilteredArticles(filtered);
+      } catch (error) {
+        console.error('Error fetching filtered articles: ', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    applyUserFilters();
+  }, [preferredAuthor, preferredCategory, preferredSource]);
+
   return (
-    <Box p={2}>
-      <Typography variant="h4">For You Page</Typography>
-    </Box>
+    <Container>
+      <Grid container spacing={2} justifyContent="center" style={{ marginBottom: '20px' }}>
+        <Typography variant="h4" component="h1">
+          Articles For You
+        </Typography>
+      </Grid>
+
+      <Grid container spacing={2}>
+        {loading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          filteredArticles.length > 0 ? (
+            filteredArticles.map((article, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">{article.title}</Typography>
+                    <Typography variant="body2">{article.description}</Typography>
+                    <Typography variant="body2">Author: {article.author || 'Unknown'}</Typography>
+                    <Typography variant="body2">Source: {article.source}</Typography>
+                    <Typography variant="body2">Published At: {dayjs(article.publishedAt).format('MMM D, YYYY')}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))
+          ) : (
+            <Typography>No articles match your preferences.</Typography>
+          )
+        )}
+      </Grid>
+    </Container>
   );
 };
 
