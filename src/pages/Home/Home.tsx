@@ -3,9 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   Card, CardContent, Typography, Grid, Container, TextField, Button, MenuItem, Select,
-  InputLabel, FormControl
+  InputLabel, FormControl, CircularProgress
 } from '@mui/material';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,15 +14,18 @@ import { fetchData } from 'api/fetchArticles';
 const Home: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedSource, setSelectedSource] = useState('All');
   const [error, setError] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(50);
   const sources = ['All', 'NewsAPI', 'NYTimes', 'The Guardian'];
 
   const handleSearch = () => {
     setLoading(true);
     setError(null);
+    setVisibleCount(50);
     fetchData(searchTerm, selectedDate?.format('YYYY-MM-DD') || null, selectedSource)
       .then((data) => {
         setArticles(data);
@@ -41,6 +44,7 @@ const Home: React.FC = () => {
     setSelectedDate(null);
     setSelectedSource('All');
     setError(null);
+    setVisibleCount(50);
     fetchData('technology', null, 'All')
       .then((data) => {
         setArticles(data);
@@ -53,6 +57,23 @@ const Home: React.FC = () => {
       });
   };
 
+  const loadMoreArticles = () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    const nextCount = visibleCount + 50;
+    setVisibleCount(nextCount);
+    fetchData(searchTerm, selectedDate?.format('YYYY-MM-DD') || null, selectedSource)
+      .then((data) => {
+        setArticles((prevArticles) => [...prevArticles, ...data]);
+        setLoadingMore(false);
+      })
+      .catch((err) => {
+        setError('Failed to fetch articles. Please try again later.');
+        console.error(err);
+        setLoadingMore(false);
+      });
+  };
+
   useEffect(() => {
     setLoading(true);
     fetchData('technology', null, 'All')
@@ -62,7 +83,7 @@ const Home: React.FC = () => {
       })
       .catch((err) => {
         setError('Failed to fetch articles. Please try again later.');
-        console.error(err); // Log the error for debugging
+        console.error(err);
         setLoading(false);
       });
   }, []);
@@ -142,7 +163,7 @@ const Home: React.FC = () => {
         <Typography>Loading...</Typography>
       ) : (
         <Grid container spacing={2}>
-          {articles.map((article, index) => (
+          {articles.slice(0, visibleCount).map((article, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card>
                 <CardContent>
@@ -155,6 +176,19 @@ const Home: React.FC = () => {
             </Grid>
           ))}
         </Grid>
+      )}
+
+      {/* Load More Button */}
+      {!loading && articles.length > visibleCount && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          {loadingMore ? (
+            <CircularProgress />
+          ) : (
+            <Button variant="contained" onClick={loadMoreArticles}>
+              Load More
+            </Button>
+          )}
+        </div>
       )}
     </Container>
   );

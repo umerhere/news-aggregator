@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Card, CardContent, Typography, Grid, Container,
+  Card, CardContent, Typography, Grid, Container, Button, CircularProgress
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
@@ -10,6 +10,8 @@ import { fetchData } from 'api/fetchArticles';
 const ForYou: React.FC = () => {
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(20);
   const { preferredAuthor, preferredCategory, preferredSource } = useSelector(
     (state: RootState) => state.settingsSlice
   );
@@ -42,6 +44,15 @@ const ForYou: React.FC = () => {
     applyUserFilters();
   }, [preferredAuthor, preferredCategory, preferredSource]);
 
+  const loadMoreArticles = () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    const nextCount = visibleCount + 20;
+    setVisibleCount(nextCount);
+    setFilteredArticles((prevArticles) => filteredArticles.slice(0, nextCount));
+    setLoadingMore(false);
+  };
+
   return (
     <Container>
       <Grid container spacing={2} justifyContent="center" style={{ marginBottom: '20px' }}>
@@ -55,7 +66,7 @@ const ForYou: React.FC = () => {
           <Typography>Loading...</Typography>
         ) : (
           filteredArticles.length > 0 ? (
-            filteredArticles.map((article, index) => (
+            filteredArticles.slice(0, visibleCount).map((article, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card>
                   <CardContent>
@@ -73,6 +84,19 @@ const ForYou: React.FC = () => {
           )
         )}
       </Grid>
+
+      {/* Load More Button */}
+      {!loading && filteredArticles.length > visibleCount && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          {loadingMore ? (
+            <CircularProgress />
+          ) : (
+            <Button variant="contained" onClick={loadMoreArticles}>
+              Load More
+            </Button>
+          )}
+        </div>
+      )}
     </Container>
   );
 };
