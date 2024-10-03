@@ -36,7 +36,5 @@ export const CONSTANTS = {
       "NewsAPI",
       "The Guardian",
       "The New York Times",
-      "BBC",
-      "Al Jazeera",
     ],
 };

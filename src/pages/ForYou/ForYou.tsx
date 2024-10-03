@@ -21,18 +21,17 @@ const ForYou: React.FC = () => {
       setLoading(true);
       try {
         const articles = await fetchData(null, null, preferredSource);
-
+  
         const filtered = articles.filter((article: Article) => {
           const matchesAuthor =
-            preferredAuthor === 'All' || article.author?.toLowerCase() === preferredAuthor.toLowerCase();
+            preferredAuthor === 'All' || (article.author && article.author.toLowerCase() === preferredAuthor.toLowerCase());
           const matchesCategory =
-            preferredCategory === 'All' || article.description?.toLowerCase().includes(preferredCategory.toLowerCase());
+            preferredCategory === 'All' || (article.category && article.category.toLowerCase() === preferredCategory.toLowerCase());
           const matchesSource =
-            preferredSource === 'All' || article.source?.toLowerCase() === preferredSource.toLowerCase();
-
+            preferredSource === 'All' || (article.source && article.source.toLowerCase() === preferredSource.toLowerCase());
           return matchesAuthor || matchesCategory || matchesSource;
         });
-
+  
         setFilteredArticles(filtered);
       } catch (error) {
         console.error('Error fetching filtered articles: ', error);
@@ -40,10 +39,10 @@ const ForYou: React.FC = () => {
         setLoading(false);
       }
     };
-
+  
     applyUserFilters();
   }, [preferredAuthor, preferredCategory, preferredSource]);
-
+  
   const loadMoreArticles = () => {
     if (loadingMore) return;
     setLoadingMore(true);

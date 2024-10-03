@@ -2,21 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AppDispatch } from '../index';
 import { CONSTANTS } from '../../core/constants';
 
-// Existing Article type
-export type Article = {
-  content: string;
-  description: string;
-  publishedAt: string;
-  source: {
-    id: string;
-    name: string;
-  };
-  title: string;
-  url: string;
-  urlToImage: string;
-  author: string;
-};
-
 // Define a new type for storing user preferences
 type UserSettings = {
   preferredAuthor: string;
