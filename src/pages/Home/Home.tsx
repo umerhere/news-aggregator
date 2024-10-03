@@ -1,4 +1,4 @@
-// src/Home.tsx
+// src/pages/Home.tsx
 
 import React, { useEffect, useState } from 'react';
 import {
@@ -17,13 +17,20 @@ const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
   const [selectedSource, setSelectedSource] = useState('All');
+  const [error, setError] = useState<string | null>(null);
   const sources = ['All', 'NewsAPI', 'NYTimes', 'The Guardian'];
 
   const handleSearch = () => {
     setLoading(true);
+    setError(null);
     fetchData(searchTerm, selectedDate?.format('YYYY-MM-DD') || null, selectedSource)
       .then((data) => {
         setArticles(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Failed to fetch articles. Please try again later.');
+        console.error(err);
         setLoading(false);
       });
   };
@@ -33,18 +40,31 @@ const Home: React.FC = () => {
     setSearchTerm('');
     setSelectedDate(null);
     setSelectedSource('All');
-    fetchData('technology', null, 'All').then((data) => {
-      setArticles(data);
-      setLoading(false);
-    });
+    setError(null);
+    fetchData('technology', null, 'All')
+      .then((data) => {
+        setArticles(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Failed to fetch articles. Please try again later.');
+        console.error(err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
     setLoading(true);
-    fetchData('technology', null, 'All').then((data) => {
-      setArticles(data);
-      setLoading(false);
-    });
+    fetchData('technology', null, 'All')
+      .then((data) => {
+        setArticles(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError('Failed to fetch articles. Please try again later.');
+        console.error(err); // Log the error for debugging
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -110,11 +130,19 @@ const Home: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Grid container spacing={2}>
-        {loading ? (
-          <Typography>Loading...</Typography>
-        ) : (
-          articles.map((article, index) => (
+      {/* Display error message */}
+      {error && (
+        <Typography color="error" variant="body1">
+          {error}
+        </Typography>
+      )}
+
+      {/* Display loading message */}
+      {loading ? (
+        <Typography>Loading...</Typography>
+      ) : (
+        <Grid container spacing={2}>
+          {articles.map((article, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card>
                 <CardContent>
@@ -125,9 +153,9 @@ const Home: React.FC = () => {
                 </CardContent>
               </Card>
             </Grid>
-          ))
-        )}
-      </Grid>
+          ))}
+        </Grid>
+      )}
     </Container>
   );
 };
